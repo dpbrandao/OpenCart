@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+<name>VFN Footer</name>
+<code>vfn-footer</code>
+<version>1.0</version>
+<author>Danilo Brandão</author>
+<link>https://www.vendafacilnet.com.br/</link>
+<file path="catalog/view/theme/*/template/common/header.twig">
+	<operation error="skip">
+	<search><![CDATA[</head>]]></search>
+	<add position="before"><![CDATA[<style type="text/css">
+.social{margin-top:-15px;}
+.social a{width:25px; height:25px; text-align:center; margin:0 2px; display:inline-block; font-size:20px; background:#000; color:#f5f5f5; border-radius:50px; -webkit-transition: all 0.3s ease-in-out; -moz-transition: all 0.3s ease-in-out; -o-transition: all 0.3s ease-in-out; -ms-transition: all 0.3s ease-in-out; transition: all 0.3s ease-in-out;}
+.social a{-webkit-transition: all 0.3s ease-in-out; -moz-transition: all 0.3s ease-in-out; -o-transition: all 0.3s ease-in-out; -ms-transition: all 0.3s ease-in-out; transition: all 0.3s ease-in-out;}
+.social a:hover{background:#ffffff; color:#000000}
+.social i{font-size:14x; font-family: 'FontAwesome}
+</style>]]></add>
+	</operation>
+</file>
+  
+  
+<file path="catalog/controller/common/footer.php">
+	<operation error="skip">
+	<search><![CDATA[$data['newsletter'] = $this->url->link('account/newsletter', '', true);]]></search>
+		<add position="after"><![CDATA[
+		$data['config_googless'] = $this->config->get('config_googless');
+		$data['config_mcafeess'] = $this->config->get('config_mcafeess');
+		$data['config_mercadopagoss'] = $this->config->get('config_mercadopagoss');
+		$data['config_pagseguross'] = $this->config->get('config_pagseguross');
+
+		$data['config_facebookid'] = $this->config->get('config_facebookid');
+		$data['config_twitterid'] = $this->config->get('config_twitterid');
+		$data['config_linkedid'] = $this->config->get('config_linkedid');
+		$data['config_youtubeid'] = $this->config->get('config_youtubeid');
+		$data['config_googleid'] = $this->config->get('config_googleid');
+		$data['config_instagramid'] = $this->config->get('config_instagramid');
+		]]></add>
+	</operation>
+	<operation>
+	<search><![CDATA[$data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time()));]]></search>
+	<add position="replace"><![CDATA[$data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time()). " / " . $this->config->get('config_cnpj'). " / " . $this->config->get('config_address'));]]></add>
+	</operation>
+</file>
+<file path="catalog/view/theme/*/template/common/footer.twig">
+	<operation error="skip">
+	<search><![CDATA[<hr>]]></search>
+		<add position="after"><![CDATA[
+		<p><left>
+		{% if config_googless %}
+			<a href="{{ config_googless }}" target="_blank"><img src="{{ caminho }}image/vfn/googless.png"></a>
+			<a href="{{ config_googless }}" target="_blank"><img src="{{ caminho }}image/vfn/sslss.png"></a>
+		{% endif %}
+		{% if config_mcafeess %}
+			<a href="{{ config_mcafeess }}" target="_blank"><img src="{{ caminho }}image/vfn/mcafeess.png"></a>
+		{% endif %}
+		{% if config_mercadopagoss %}
+			<a href="{{ config_mercadopagoss }}" target="_blank"><img src="{{ caminho }}image/vfn/mercadopagoss.png"></a>
+		{% endif %}
+		{% if config_pagseguross %}
+			<a href="{{ config_pagseguross }}" target="_blank"><img src="{{ caminho }}image/vfn/pagseguross.png"></a>
+		{% endif %}</left></p><br>
+
+		<span class="social pull-left">			
+		{% if config_facebookid %}
+			<a class="facebook" href="{{ config_facebookid }}" target="_blank"><i class="fa fa-facebook"></i></a>
+		{% endif %}
+		{% if config_twitterid %}
+			<a class="twitter" href="{{ config_twitterid }}" target="_blank"><i class="fa fa-twitter"></i></a>
+		{% endif %}
+		{% if config_linkedid %}
+			<a class="linkedin" href="{{ config_linkedid }}" target="_blank"><i class="fa fa-linkedin"></i></a>
+		{% endif %}
+		{% if config_youtubeid %}
+			<a class="youtube" href="{{ config_youtubeid }}" target="_blank"><i class="fa fa-youtube"></i></a>
+		{% endif %}
+		{% if config_googleid %}
+			<a class="google" href="{{ config_googleid }}" target="_blank"><i class="fa fa-google"></i></a>
+		{% endif %}
+		{% if config_instagramid %}
+			<a class="instagram" href="{{ config_instagramid }}" target="_blank"><i class="fa fa-instagram"></i></a>
+		{% endif %}			
+		</span>
+		<br>]]></add>
+	</operation>
+</file>  
+<file path="admin/controller/setting/setting.php">
+	<operation error="skip">
+	<search><![CDATA[$this->load->model('tool/image');]]></search>
+	<add position="before"><![CDATA[
+		//Aqui passa o CNPJ
+		if (isset($this->request->post['config_cnpj'])) {
+			$data['config_cnpj'] = $this->request->post['config_cnpj'];
+		} else {
+			$data['config_cnpj'] = $this->config->get('config_cnpj');
+		}
+
+		//Aqui começa as Redes Sociais
+		if (isset($this->request->post['config_facebookid'])) {
+			$data['config_facebookid'] = $this->request->post['config_facebookid'];
+		} else {
+			$data['config_facebookid'] = $this->config->get('config_facebookid');
+		}
+		if (isset($this->request->post['config_twitterid'])) {
+			$data['config_twitterid'] = $this->request->post['config_twitterid'];
+		} else {
+			$data['config_twitterid'] = $this->config->get('config_twitterid');
+		}
+		if (isset($this->request->post['config_linkedid'])) {
+			$data['config_linkedid'] = $this->request->post['config_linkedid'];
+		} else {
+			$data['config_linkedid'] = $this->config->get('config_linkedid');
+		}
+		
+		if (isset($this->request->post['config_youtubeid'])) {
+			$data['config_youtubeid'] = $this->request->post['config_youtubeid'];
+		} else {
+			$data['config_youtubeid'] = $this->config->get('config_youtubeid');
+		}
+		if (isset($this->request->post['config_googleid'])) {
+			$data['config_googleid'] = $this->request->post['config_googleid'];
+		} else {
+			$data['config_googleid'] = $this->config->get('config_googleid');
+		}
+		if (isset($this->request->post['config_instagramid'])) {
+			$data['config_instagramid'] = $this->request->post['config_instagramid'];
+		} else {
+			$data['config_instagramid'] = $this->config->get('config_instagramid');
+		}
+
+
+
+		//Aqui começa as Imagens
+		if (isset($this->request->post['config_googless'])) {
+			$data['config_googless'] = $this->request->post['config_googless'];
+		} else {
+			$data['config_googless'] = $this->config->get('config_googless');
+		}				
+		if (isset($this->request->post['config_mcafeess'])) {
+			$data['config_mcafeess'] = $this->request->post['config_mcafeess'];
+		} else {
+			$data['config_mcafeess'] = $this->config->get('config_mcafeess');
+		}
+		if (isset($this->request->post['config_mercadopagoss'])) {
+			$data['config_mercadopagoss'] = $this->request->post['config_mercadopagoss'];
+		} else {
+			$data['config_mercadopagoss'] = $this->config->get('config_mercadopagoss');
+		}
+		if (isset($this->request->post['config_pagseguross'])) {
+			$data['config_pagseguross'] = $this->request->post['config_pagseguross'];
+		} else {
+			$data['config_pagseguross'] = $this->config->get('config_pagseguross');
+		}]]></add>
+	</operation>
+</file>  
+<file path="admin/language/pt-br/pt-br.php">
+<operation error="skip">
+	<search><![CDATA[$_['tab_google']                    = 'Google';]]></search>
+	<add position="after"><![CDATA[$_['tab_footer']                    = 'Rodapé';]]></add>
+</operation>
+</file>
+<file path="admin/language/pt-br/setting/setting.php">
+	<operation error="skip">
+	<search><![CDATA[$_['text_error']                   = 'Tratamento de erros';]]></search>
+	<add position="after"><![CDATA[
+		$_['text_vfncadastro']                   = 'Cadastro';
+		$_['text_vfnredireciona']                   = 'Redirecionar Imagens';
+		$_['text_vfnredesocial']                   = 'Redes Sociais';
+		]]></add>
+	</operation>
+	<operation error="skip">
+		<search><![CDATA[$_['entry_status']                 = 'Situação';]]></search>
+		<add position="after"><![CDATA[
+			$_['entry_facebookid']                 = 'Facebook URL';
+			$_['entry_twitterid']                 = 'Twitter URL';
+			$_['entry_linkedid']                 = 'Linkedin URL';
+			$_['entry_youtubeid']                 = 'YouTube URL';
+			$_['entry_googleid']                 = 'Google + URL';
+			$_['entry_instagramid']                 = 'Instagram URL';
+			$_['entry_cnpj']                 = 'Cnpj da empresa';
+			$_['entry_googless']                 = 'Seu Google Security';
+			$_['entry_mcafeess']                 = 'Seu Mcafee';
+			$_['entry_mercadopagoss']                 = 'Seu Mercado Pago';
+			$_['entry_pagseguross']                 = 'Seu PagSeguro';
+			]]></add>
+	</operation>
+	<operation error="skip">
+		<search><![CDATA[$_['help_geocode']                 = 'Código de geolocalização da loja.';]]></search>
+		<add position="before"><![CDATA[
+			$_['help_facebookid']                 = 'Endereço da Pagina no Facebook - Colocar o endereço completo com HTTPS://';
+			$_['help_twitterid']                 = 'Endereço do Twitter - Colocar o endereço completo com HTTPS://';
+			$_['help_linkedid']                 = 'Endereço do Linkedin - Colocar o endereço completo com HTTPS://';
+			$_['help_youtubeid']                 = 'Endereço do Canal do YouTube - Colocar o endereço completo com HTTPS://';
+			$_['help_googleid']                 = 'Endereço do Google Plus - Colocar o endereço completo com HTTPS://';
+			$_['help_instagramid']                 = 'Endereço do Instagram - Colocar o endereço completo com HTTPS://';
+			$_['help_cnpj']                 = 'Esse campo é para cadastrar o CNPJ da empresa, de forma que ele apareça no rodapé';
+			$_['help_googless']                 = 'Cadastro no Google Security para Avaliar a Segurança';
+			$_['help_mcafeess']                 = 'Cadastro no Mcafee para Avaliar a Segurança';
+			$_['help_mercadopagoss']                 = 'Endereço do Mercado Pago';
+			$_['help_pagseguross']                 = 'Endereço do PagSeguro';
+			]]></add>
+	</operation>
+</file>
+<file path="admin/language/en-gb/en-gb.php">
+	<operation error="skip">
+		<search><![CDATA[$_['tab_google']                    = 'Google';]]></search>
+		<add position="after"><![CDATA[$_['tab_footer']                    = 'Footer';]]></add>
+	</operation>
+</file>
+<file path="admin/language/en-gb/setting/setting.php">
+	<operation error="skip">
+		<search><![CDATA[$_['text_error']                     = 'Error Handling';]]></search>
+		<add position="after"><![CDATA[
+			$_['text_vfncadastro']                   = 'Register';
+			$_['text_vfnredireciona']                   = 'Redirect Images';
+			$_['text_vfnredesocial']                   = 'Social networks';
+			]]></add>
+	</operation>		
+	<operation error="skip">
+		<search><![CDATA[$_['entry_status']                 = 'Status';]]></search>
+		<add position="after"><![CDATA[
+			$_['entry_facebookid']                 = 'Facebook URL';
+			$_['entry_twitterid']                 = 'Twitter URL';
+			$_['entry_linkedid']                 = 'Linkedin URL';
+			$_['entry_youtubeid']                 = 'YouTube URL';
+			$_['entry_googleid']                 = 'Google + URL';
+			$_['entry_instagramid']                 = 'Instagram URL';
+			$_['entry_cnpj']                 = 'Cnpj';
+			$_['entry_googless']                 = 'Your Google Security';
+			$_['entry_mcafeess']                 = 'Your Mcafee';
+			$_['entry_mercadopagoss']                 = 'Your Mercado Pago';
+			$_['entry_pagseguross']                 = 'Your PagSeguro';
+			]]></add>
+	</operation>
+	<operation error="skip">
+		<search><![CDATA[$_['help_geocode']                   = 'Please enter your store location geocode manually.';]]></search>
+		<add position="before"><![CDATA[
+			$_['help_facebookid']                 = 'Facebook Page Address';
+			$_['help_twitterid']                 = 'Twitter Address';
+			$_['help_linkedid']                 = 'Linkedin Address';
+			$_['help_youtubeid']                 = 'YouTube Channel Address';
+			$_['help_googleid']                 = 'Google Plus Address';
+			$_['help_instagramid']                 = 'Instagram Address';
+			$_['help_cnpj']                 = 'Cnpj';
+			$_['help_googless']                 = 'Sign up for Google Security to Assess Security';
+			$_['help_mcafeess']                 = 'Mcafee Registration to Assess Security';
+			$_['help_mercadopagoss']                 = 'Address of the Mercado Pago';
+			$_['help_pagseguross']                 = 'Address of the PagSeguro';
+
+			]]></add>
+	</operation>
+</file>
+<file path="admin/view/template/setting/setting.twig">
+	<operation error="skip">
+		<search><![CDATA[<li><a href="#tab-server" data-toggle="tab">{{ tab_server }}</a></li>]]></search>
+			<add position="after"><![CDATA[<li><a href="#tab-footer" data-toggle="tab">{{ tab_footer }}</a></li>]]></add>
+	</operation>
+  	<operation error="skip">
+		<search><![CDATA[<div class="tab-pane" id="tab-server">]]></search>
+		<add position="before"><![CDATA[
+			<div class="tab-pane" id="tab-footer">
+			  <legend>{{ text_vfncadastro }}</legend>
+				<div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-config_cnpj"><span data-toggle="tooltip" title="{{ help_cnpj }}">{{ entry_cnpj }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_cnpj" value="{{ config_cnpj }}" placeholder="{{ entry_cnpj }}" id="input_cnpj" class="form-control" />
+                  </div>
+            </div>
+<legend>{{ text_vfnredireciona }}</legend>
+			<div class="form-group">
+                  <label class="col-sm-2 control-label" for="googless"><span data-toggle="tooltip" title="{{ help_googless }}">{{ entry_googless }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_googless" value="{{ config_googless }}" placeholder="{{ entry_googless }}" id="googless-id" class="form-control" />
+                  </div>
+              </div>
+			  <div class="form-group">
+                  <label class="col-sm-2 control-label" for="mcafeess"><span data-toggle="tooltip" title="{{ help_mcafeess }}">{{ entry_mcafeess }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_mcafeess" value="{{ config_mcafeess }}" placeholder="{{ entry_mcafeess }}" id="mcafeess-id" class="form-control" />
+                  </div>
+              </div>
+			  <div class="form-group">
+                  <label class="col-sm-2 control-label" for="mercadopagoss"><span data-toggle="tooltip" title="{{ help_mercadopagoss }}">{{ entry_mercadopagoss }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_mercadopagoss" value="{{ config_mercadopagoss }}" placeholder="{{ entry_mercadopagoss }}" id="mercadopagoss-id" class="form-control" />
+                  </div>
+              </div>
+			  <div class="form-group">
+                  <label class="col-sm-2 control-label" for="pagseguross"><span data-toggle="tooltip" title="{{ help_pagseguross }}">{{ entry_pagseguross }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_pagseguross" value="{{ config_pagseguross }}" placeholder="{{ entry_pagseguross }}" id="pagseguross-id" class="form-control" />
+                  </div>
+              </div>
+
+
+<legend>{{ text_vfnredesocial }}</legend>
+			  <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input_config_facebookid"><span data-toggle="tooltip" title="{{ help_facebookid }}">{{ entry_facebookid }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_facebookid" value="{{ config_facebookid }}" placeholder="{{ entry_facebookid }}" id="input_facebookid" class="form-control" />
+                  </div>
+              </div>
+			  <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input_config_twitterid"><span data-toggle="tooltip" title="{{ help_twitterid }}">{{ entry_twitterid }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_twitterid" value="{{ config_twitterid }}" placeholder="{{ entry_twitterid }}" id="input_twitterid" class="form-control" />
+                  </div>
+              </div>
+			  <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input_config_linkedid"><span data-toggle="tooltip" title="{{ help_linkedid }}">{{ entry_linkedid }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_linkedid" value="{{ config_linkedid }}" placeholder="{{ entry_linkedid }}" id="input_linkedid" class="form-control" />
+                  </div>
+              </div>
+			  <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input_config_youtubeid"><span data-toggle="tooltip" title="{{ help_youtubeid }}">{{ entry_youtubeid }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_youtubeid" value="{{ config_youtubeid }}" placeholder="{{ entry_youtubeid }}" id="input_youtubeid" class="form-control" />
+                  </div>
+              </div>
+			  <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input_config_googleid"><span data-toggle="tooltip" title="{{ help_googleid }}">{{ entry_googleid }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_googleid" value="{{ config_googleid }}" placeholder="{{ entry_googleid }}" id="input_googleid" class="form-control" />
+                  </div>
+              </div>
+			  <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input_config_instagramid"><span data-toggle="tooltip" title="{{ help_instagramid }}">{{ entry_instagramid }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_instagramid" value="{{ config_instagramid }}" placeholder="{{ entry_instagramid }}" id="input_instagramid" class="form-control" />
+                  </div>
+              </div>
+
+
+			</div>
+			]]></add>
+	</operation>
+</file>
+</modification>
